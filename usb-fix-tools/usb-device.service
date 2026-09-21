@@ -1,0 +1,13 @@
+[Unit]
+Description=HoolockLinux USB Gadget (network+serial) setup
+DefaultDependencies=no
+After=sysinit.target
+Before=basic.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/usb-gadget-setup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target
