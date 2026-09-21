@@ -30,8 +30,7 @@ Starting up you wanna have the following prerequisites:
 This part really depends on how much storage you'll give to linux, mind you the number is in bytes but in binary system, so for example if I want **9 GB** for linux then it would be `sudo resize_apfs disk0s1 60129542144`
 >Cuz **64 GB - 9 GB = 56 GB**, 64 GB being your iPhone storage so **56 × 1024³ = 60129542144 bytes** 
 
-So i would have to put `sudo resize_apfs disk0s1 60129542144`
-After that the device should recognize the storage as 56 GB successfully.
+After that the iPhone should recognize the storage as resized system successfully.
 
 
 ## Formatting partition
@@ -69,7 +68,13 @@ Then: `c`--> `1` --> `Container` ---> `c` --> `2` --> `linux`
 Now `p` to make to make sure its all good, you should see 2 partitions, **1 = Container**, **2 = linux**
 Then after **REALLY** making sure, write to disk with `w` and confirm.
 
-...
+## Building the kernel
+
+We will be using the Hoolock Linux kernel for this, follow their official guide [here](https://github.com/HoolockLinux/docs/blob/master/tutorials/SETUP.md)
+ 
+---
+
+After you compiled the kernel, the Image.gz will be found at `/path/to/hoolock-linux/arch/arm64/boot/`
 
 
 
