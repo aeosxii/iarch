@@ -21,12 +21,16 @@ Starting up you wanna have the following prerequisites:
 
 - The same for **gdisk** `scp /path/to/gdisk mobile@<Your iPhone IP>:/var/jb/var/mobile`
 
-- Now we are gonna be moving them internally to /var/jb/var/bin with: `ssh mobile@<Your iPhone IP>` then `sudo mv /var/jb/var/mobile/resize_apfs /var/jb/var/bin/` same for **gdisk** with `sudo mv /var/jb/var/mobile/gdisk /var/jb/var/bin/` now `chmod +x /var/jb/var/bin/resize_apfs` and `chmod +x /var/jb/var/bin/gdisk`
+- Now we are gonna be moving them internally to /var/jb/var/bin with: `ssh mobile@<Your iPhone IP>` then `sudo mv /var/jb/var/mobile/resize_apfs /var/jb/var/bin/` 
+
+- Same for **gdisk** with `sudo mv /var/jb/var/mobile/gdisk /var/jb/var/bin/` now `chmod +x /var/jb/var/bin/resize_apfs` and `chmod +x /var/jb/var/bin/gdisk`
 
 ### Resizing your partition
 
 This part really depends on how much storage you'll give to linux, mind you the number is in bytes but in binary system, so for example if I want **9 GB** for linux then it would be `sudo resize_apfs disk0s1 60129542144`
->Cuz **64 GB - 9 GB = 56 GB**, 64 GB being your iPhone storage so **64 - 9 = 56  -->  56 × 1024³ = 60129542144 bytes**
+>Cuz **64 GB - 9 GB = 56 GB**, 64 GB being your iPhone storage so **56 × 1024³ = 60129542144 bytes** 
+
+So i would have to put `sudo resize_apfs disk0s1 60129542144`
 After that the device should recognize the storage as 56 GB successfully.
 
 
@@ -56,14 +60,14 @@ Partition table scan:
 ---
 Then: `d` --> `n` --> `1` --> `6` --> Now take the number in bytes you used to format the partition, in our example 60129542144 --> `60129542144` --> `AF0A`
 
-After that the iOS partition will be declared the same size we resized it, but now u freed the linux storage
+After that the iOS partition will be declared the same size we resized it, but now u freed the linux space
 
 Now for the new partition: `n` --> `2` --> `*Enter` --> `+9G` --> `8305` 
 
 Then: `c`--> `1` --> `Container` ---> `c` --> `2` --> `linux`
 
 Now `p` to make to make sure its all good, you should see 2 partitions, **1 = Container**, **2 = linux**
-Then after REALLY making sure, write to disk with `w` and confirm.
+Then after **REALLY** making sure, write to disk with `w` and confirm.
 
 ...
 
