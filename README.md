@@ -13,17 +13,28 @@ Starting up you wanna have the following prerequisites:
 
 - Next, on iPhone, you wanna install the `openssh` package from Sileo and then look up your current iPhone IP in wi-fi settings
 
-- Over your pc open your terminal and insert: ``ssh mobile@<Your iPhone IP>`` then when prompted, create (or not) a simple password for your connection
+- Over your pc open your terminal and insert: `ssh mobile@<Your iPhone IP>` then when prompted, create (or not) a simple password for your connection
 
 - Exit the `ssh` environment 
 
-- Now after testing the connection, do on your terminal: `scp /path/to/resize_apfs mobile@<Your iPhone IP>:/var/jb/var/mobile` for the **resize_apfs** tool
+- Now after testing the connection, do on your terminal for the **resize_apfs** tool:
 
-- The same for **gdisk** `scp /path/to/gdisk mobile@<Your iPhone IP>:/var/jb/var/mobile`
+```
+$ ~ scp /path/to/resize_apfs mobile@<Your iPhone IP>:/var/jb/var/mobile
+```
 
-- Now we are gonna be moving them internally to /var/jb/var/bin with: `ssh mobile@<Your iPhone IP>` then `sudo mv /var/jb/var/mobile/resize_apfs /var/jb/var/bin/` 
+- The same for **gdisk**
+```
+$ ~ scp /path/to/gdisk mobile@<Your iPhone IP>:/var/jb/var/mobile`
+```
 
-- Same for **gdisk** with `sudo mv /var/jb/var/mobile/gdisk /var/jb/var/bin/` now `chmod +x /var/jb/var/bin/resize_apfs` and `chmod +x /var/jb/var/bin/gdisk`
+- Now we are gonna be moving them internally to /var/jb/var/bin and give them permissions with: `ssh mobile@<Your iPhone IP>` then 
+```
+#~ sudo mv /var/jb/var/mobile/resize_apfs /var/jb/var/bin/
+#~ sudo mv /var/jb/var/mobile/gdisk /var/jb/var/bin/
+#~ chmod +x /var/jb/var/bin/resize_apfs
+#~ chmod +x /var/jb/var/bin/gdisk
+```
 
 ### Resizing your partition
 
@@ -37,33 +48,65 @@ After that the iPhone should recognize the storage as resized system successfull
 ### **⚠️ This section requires extra attention as any misconfiguration may BRICK UR DEVICE forever. ever.**
 
 We just need to create the partition correctly and format it, type: `sudo gdisk /dev/rdisk0`
+>Some cases it might be necessary to run it inside the directory, if so do: `cd /var/jb/var/mobile && sudo ./gdisk`
 
 This should appear:
 
 ---
 
-`GPT fdisk (gdisk) version 1.0.10`
+```
+GPT fdisk (gdisk) version 1.0.10
 
-`Warning: Devices opened with shared lock will not have their
+Warning: Devices opened with shared lock will not have their
 partition table automatically reloaded!
 Partition table scan:
   MBR: protective
   BSD: not present
   APM: not present
-  GPT: present`
+  GPT: present
 
-`Found valid GPT with protective MBR; using GPT.`
+Found valid GPT with protective MBR; using GPT.
 
-`Command (? for help):`
+Command (? for help):
+```
 
 ---
-Then: `d` --> `n` --> `1` --> `6` --> Now take the number in bytes you used to format the partition, in our example 60129542144 --> `60129542144` --> `AF0A`
+Then do:
+
+```
+d
+n
+1
+6
+```
+
+Now take the number in bytes you used to format the partition, in our example 60129542144 --> 
+```
+60129542144 
+AF0A
+```
 
 After that the iOS partition will be declared the same size we resized it, but now u freed the linux space
 
-Now for the new partition: `n` --> `2` --> `*Enter` --> `+9G` --> `8305` 
+Now for the new partition: 
 
-Then: `c`--> `1` --> `Container` ---> `c` --> `2` --> `linux`
+```
+n
+2
+*Enter*
++9G
+8305
+``` 
+
+Then:
+```
+c
+1
+Container
+c
+2
+linux
+```
 
 Now `p` to make to make sure its all good, you should see 2 partitions, **1 = Container**, **2 = linux**
 Then after **REALLY** making sure, write to disk with `w` and confirm.
@@ -71,10 +114,27 @@ Then after **REALLY** making sure, write to disk with `w` and confirm.
 ## Building the kernel
 
 We will be using the Hoolock Linux kernel for this, follow their official guide [here](https://github.com/HoolockLinux/docs/blob/master/tutorials/SETUP.md)
+
+We will also need the m1n1 bootloader, guide [here](https://github.com/HoolockLinux/m1n1)
  
 ---
 
-After you compiled the kernel, the Image.gz will be found at `/path/to/hoolock-linux/arch/arm64/boot/`
+After you compiled the hoolock linux kernel, the Image.gz will be found at `/path/to/hoolock-linux/arch/arm64/boot/`
+
+Then as said we will used the pongoOS method, follow guide until **# Building pongoterm**, guide [here](https://github.com/HoolockLinux/docs/blob/master/tutorials/SETUP_pongoOS.md)
+
+## Making boot binary
+
+Now with all the files neccessary to boot we need to build the **m1n1-linux.bin** like this:
+```
+cat /path/to/m1n1/build/m1n1.bin <(echo 'chosen.bootargs=<kernel command line here>')  \
+	/path/to/hoolock-linux/arch/arm64/boot/dts/apple/*.dtb \
+	/path/to/hoolock-linux/arch/arm64/boot/Image.gz  \
+	/path/to/initramfs.gz  > m1n1-linux.bin
+```
+
+
+
 
 
 
