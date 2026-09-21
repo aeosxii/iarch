@@ -65,6 +65,8 @@ Then: `c`--> `1` --> `Container` ---> `c` --> `2` --> `linux`
 Now `p` to make to make sure its all good, you should see 2 partitions, **1 = Container**, **2 = linux**
 Then after REALLY making sure, write to disk with `w` and confirm.
 
+...
+
 
 
 
