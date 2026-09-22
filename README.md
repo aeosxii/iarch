@@ -129,7 +129,7 @@ Then as said we will used the pongoOS method, follow guide JUST UNTIL **Building
 
 ## Making hoolock linux environment
 
-### In this part we will need to boot into the raw linux kernel, to make some configurations and the fixes
+### In this part we will need to boot into the raw linux kernel, to make some configurations and fixes
 
 - Now with all the files necessary to boot we need to build the **m1n1-hoolock.bin** binary like this:
 ```
@@ -154,7 +154,7 @@ Then upload the newly created **m1n1-hoolock.bin**:
 $ ~ cd /pongoOS/scripts
 $ ~ printf '/send /path/to/m1n1-hoolock.bin\nbootm\n' | ./pongoterm
 ```
-Then the device should boot into the Linux kernel and open a `telnet` communication protocol
+Then the device should boot into the Linux kernel and open a `telnet` communication protocol, leave the iPhone aside for now
 
 ---
 
@@ -175,12 +175,14 @@ Now we are going to copy **qemu-user-static** and **binfmt-support** for running
 Install if not installed:
 
 $ ~  sudo apt install qemu-user-static binfmt-support
+
 # Fedora
 $ ~ sudo dnf install -y qemu-user-static
+
 # Arch
 $ ~ sudo pacman -Syu qemu-user-static qemu-user-static-binfmt
 
-Then copy it to the rootfs
+Then copy it to the rootfs -->
 
 $ ~ sudo cp /usr/bin/qemu-aarch64-static archlinux/usr/bin/
 ```
@@ -192,14 +194,14 @@ $ ~ sudo chroot archlinux /usr/bin/qemu-aarch64-static /bin/bash
 >You should see this:
 [root@"Your user"-01 /]# _
 
-Now set inside it:
+Now setup:
 ```
 # passwd
 # pacman-key --init
 # pacman-key --populate
-# pacman -Rdd linux-aarch64 (to keep some extra space on disk)
+# pacman -Rdd linux-aarch64
 ```
-Now **exit** chroot environment and compact it back to send it over to the iPhone
+Now **exit** chroot environment and compact it back to send it over to the iPhone later
 ```
 $ ~ sudo tar czf archlinux-ready.tar.gz -C alarm-root .
 ```
@@ -245,9 +247,42 @@ $ ~ sudo mkdir -p /mnt/archlinux
 $ ~ sudo mount /dev/sdX /mnt/archlinux
 $ ~ sudo tar xzf archlinux-ready.tar.gz -C /mnt/archlinux
 ```
+---
+**Then we just have some USB fixes to be done, for that:**
+- Grab the **usb-setup.sh** script i did and copy it to `/usr/local/bin` then give it permissions with
+```
+chmod +x /mnt/archlinux/usr/local/bin/usb-setup.sh
+```
+- Now for the **usb-device.service**, copy it over to `/etc/systemd/system/`, then:
+```
+systemctl enable usb-gadget.service
+```
 
+## ***After this it should be all set for the Arch Linux boot!!***
 
+### Booting Arch Linux
+- By now you have only the **m1n1-hoolock.bin** now we'll make the **m1n1-arch.bin** binary to boot into arch
 
+Now this, on your host machine:
+```
+$ ~ cat /path/to/m1n1/build/m1n1.bin \
+    <(echo 'chosen.bootargs=root=/dev/nvme0n1p2 rw rootwait init=/bin/sh') \
+    /path/to/hoolock-linux/arch/arm64/boot/dts/apple/*.dtb \
+    /path/to/hoolock-linux/arch/arm64/boot/Image.gz \
+    > m1n1-arch.bin
+```
+### Now that you created the **Arch Linux** boot instruction
+
+Boot it the same way as booting **m1n1-hoolock.bin**:
+```
+$ ~ PALERA1N_BYPASS_PASSCODE_CHECK=1 palera1n -lp -k /path/to/pongoOS/build/Pongo.bin
+```
+Now send the Arch binary
+```
+$ ~ cd /pongoOS/scripts
+$ ~ printf '/send /path/to/m1n1-hoolock.bin\nbootm\n' | ./pongoterm
+```
+...
 
 
 
