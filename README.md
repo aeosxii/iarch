@@ -218,22 +218,34 @@ So now that youre inside the Linux in the iPhone, just:
 $ ~ telnet 172.16.42.1
 ```
 And then youre inside the Linux, from here we're going to pull the rootfs to the partition, for that we are going to push it via USB Mass Storage, the iPhone would be like a USB driver for our host
+
+For that we want to make this is script inside linux
 ```
-~ # umount /arch 2>/dev/null
-~ # echo "" > /config/usb_gadget/g1/UDC
-~ # mkdir /config/usb_gadget/g1/functions/mass_storage.usb0
-~ # echo /dev/nvme0n1p2 > /config/usb_gadget/g1/functions/mass_storage.usb0/lun.0/
-~ # ln -s /config/usb_gadget/g1/functions/mass_storage.usb0 /config/usb_gadget/g1/configs/c.1/
-~ # UDC_DEV=$(ls /sys/class/udc | head -1)
-~ # echo "$UDC_DEV" > /config/usb_gadget/g1/UDC
+cat > /enable-ms.sh << 'EOF' \
+#!/bin/sh \
+echo "" > /config/usb_gadget/g1/UDC \
+mkdir -p /config/usb_gadget/g1/functions/mass_storage.usb0 \
+echo /dev/nvme0n1p2 > /config/usb_gadget/g1/functions/mass_storage.usb0/lun.0/file \
+ln -sf /config/usb_gadget/g1/functions/mass_storage.usb0
+/config/usb_gadget/g1/configs/c.1/ \
+UDC_DEV=$(ls /sys/class/udc | head -1) \
+echo "$UDC_DEV" > /config/usb_gadget/g1/UDC \
+EOF
 ```
-- On the host side, it should appear a new USB drive, check it with `lsblk`, and now the pulling part, here we will mount the iPhone as USB storage in /mnt/archlinux/ then decompress the ****archlinux-ready.tar.gz**** into it
+```
+~ # chmod +x /tmp/enable-ms.sh
+~ # nohup /tmp/enable-ms.sh > /tmp/enable-ms.log 2>&1 &
+```
+
+If the script ran successfully a new device will pop up on your screen
+
+- Now on the host side, it should appear a new USB drive, check it with `lsblk`, and now the transfer part, open the device, then decompress the ****archlinux-ready.tar.gz**** into it
 ```
 $ ~ sudo mkdir -p /mnt/archlinux
 $ ~ sudo mount /dev/sdX /mnt/archlinux
 $ ~ sudo tar xzf archlinux-ready.tar.gz -C /mnt/archlinux
 ```
-...
+
 
 
 
