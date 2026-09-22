@@ -1,4 +1,7 @@
-<img src="https://archlinux.org/static/logos/archlinux-logo-dark-1200dpi.png" width="200">
+<img src="https://archlinux.org/static/logos/archlinux-logo-dark-1200dpi.png" width="200">  
+
+
+
 
 
 # Installing Arch Linux on iPhone 8 natively
