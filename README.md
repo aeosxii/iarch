@@ -1,3 +1,6 @@
+<img src="https://archlinux.org/static/logos/archlinux-logo-dark-1200dpi.png" width="200">
+
+
 # Installing Arch Linux on iPhone 8 natively
 ### This will guide you through the partition scheme to the boot and DE setup.
 _- Currently only for iPhone 8_
@@ -257,8 +260,7 @@ chmod +x /mnt/archlinux/usr/local/bin/usb-setup.sh
 ```
 systemctl enable usb-gadget.service
 ```
-
-## ***After this it should be all set for the Arch Linux boot!!***
+### ***After this all should be ready to boot Arch Linux!***
 
 ### Booting Arch Linux
 - By now you have only the **m1n1-hoolock.bin** now we'll make the **m1n1-arch.bin** binary to boot into arch
@@ -282,7 +284,11 @@ Now send the Arch binary
 $ ~ cd /pongoOS/scripts
 $ ~ printf '/send /path/to/m1n1-hoolock.bin\nbootm\n' | ./pongoterm
 ```
-...
+DE tomorrow lol 
+
+---
+
+![HoolockLinux](https://img.shields.io/badge/HoolockLinux-000000?style=flat&logo=linux&logoColor=white)  |  ![iPhone 8](https://img.shields.io/badge/iPhone_8-A2AAAD?style=flat&logo=apple&logoColor=white)  |  ![Arch Linux!](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
 
 
 
