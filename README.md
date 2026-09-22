@@ -145,6 +145,8 @@ $ ~ cat /path/to/m1n1/build/m1n1.bin <(echo 'chosen.bootargs=earlycon rw logleve
 ```
 - Then `pwd` just to see where it is.
 
+>Or download the pre-compiled binary [here](https://github.com/aeosxii/iarch/raw/refs/heads/main/binaries/m1n1-hoolock.bin)
+
 - Now we need palera1n
 ```
 $ ~ /bin/sh -c "$(curl -fsSL https://static.palera.in/scripts/install.sh)" 
@@ -276,6 +278,8 @@ $ ~ cat /path/to/m1n1/build/m1n1.bin \
     /path/to/hoolock-linux/arch/arm64/boot/Image.gz \
     > m1n1-arch.bin
 ```
+>Or the pre-compiled arch binary [here](https://github.com/aeosxii/iarch/raw/refs/heads/main/binaries/m1n1-arch.bin)
+
 ### Now that you created the **Arch Linux** boot instruction
 
 Boot it the same way as booting **m1n1-hoolock.bin**:
@@ -290,6 +294,7 @@ $ ~ printf '/send /path/to/m1n1-hoolock.bin\nbootm\n' | ./pongoterm
 DE tomorrow lol 
 
 ---
+*This project was compiled and tested on the Linux Kernel version 7.3.0*
 
 ![HoolockLinux](https://img.shields.io/badge/HoolockLinux-000000?style=flat&logo=linux&logoColor=white)  |  ![iPhone 8](https://img.shields.io/badge/iPhone_8-A2AAAD?style=flat&logo=apple&logoColor=white)  |  ![Arch Linux!](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
 
