@@ -3,8 +3,7 @@
 
 
 
-
-# Installing Arch Linux on iPhone 8 natively
+# Installing Arch Linux on iPhone 8
 ### This will guide you through the partition scheme to the boot and DE setup.
 _- Currently only for iPhone 8_
 
@@ -241,8 +240,8 @@ echo "$UDC_DEV" > /config/usb_gadget/g1/UDC \
 EOF
 ```
 ```
-~ # chmod +x /tmp/enable-ms.sh
-~ # nohup /tmp/enable-ms.sh > /tmp/enable-ms.log 2>&1 &
+~ # chmod +x /enable-ms.sh
+~ # nohup /enable-ms.sh > /enable-ms.log 2>&1 &
 ```
 
 If the script ran successfully a new device will pop up on your screen
