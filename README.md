@@ -283,10 +283,12 @@ Now to make sure they work
 ~ # chroot arch /bin/bash
 
 /# systemctl enable usb-gadget.service
+/# systemctl enable serial-getty@ttyGS0.service
 /# exit
 ```
+
 ---
- 
+
 ### ***After this all should be ready to boot Arch Linux!***
 
 ### Booting Arch Linux
@@ -312,7 +314,42 @@ Now send the Arch binary
 $ ~ cd /pongoOS/scripts
 $ ~ printf '/send /path/to/m1n1-hoolock.bin\nbootm\n' | ./pongoterm
 ```
-DE tomorrow lol 
+
+### Control the linux
+---
+
+Install the `screen` tool with 
+```
+$ ~ sudo apt install screen 
+$ ~ sudo usermod -aG dialout $USER
+```
+Then tap into the device with
+```
+sudo screen /dev/ttyACM0 115200
+```
+### Setup internet connection
+- On the host, you wann grab the iPhone serial identifier with:
+```
+ip a
+```
+It should look *somewhat* similar to this
+```
+21: enx0eecc074f34c: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 0e:ec:c0:74:f3:4c brd ff:ff:ff:ff:ff:ff
+    inet 172.16.42.2/24 brd 172.16.42.255 scope global enx0eecc074f34c
+       valid_lft forever preferred_lft forever
+```
+And here in that case we see the device identifier is `enx0eecc074f34c`, so now run
+```
+$ ~ sudo ifconfig "Your identifier" 172.16.42.2 netmask 255.255.255.0
+$ ~ sudo sysctl -w net.ipv4.ip_forward=1
+```
+On the Arch side
+```
+/ ~ 
+
+Then done! 
+>I advise you that u should set a password for the alarm and root users and
 
 ---
 *This project was compiled and tested on the Linux Kernel version 7.3.0*
