@@ -344,10 +344,15 @@ And here in that case we see the device identifier is `enx0eecc074f34c`, so now 
 $ ~ sudo ifconfig "Your identifier" 172.16.42.2 netmask 255.255.255.0
 $ ~ sudo sysctl -w net.ipv4.ip_forward=1
 ```
-On the Arch side
+- On the Arch side
 ```
-/ ~ 
+/ ~ ip route add default via 172.16.42.2
 ```
+Then update everything with
+```
+/ ~ pacman -Syu --disable-sandbox
+```
+
 Then done! 
 >I advise you that u should set a password for the alarm and root users and
 
