@@ -347,7 +347,7 @@ $ ~ sudo sysctl -w net.ipv4.ip_forward=1
 On the Arch side
 ```
 / ~ 
-
+```
 Then done! 
 >I advise you that u should set a password for the alarm and root users and
 
