@@ -350,11 +350,10 @@ $ ~ sudo sysctl -w net.ipv4.ip_forward=1
 ```
 Then update everything with
 ```
-/ ~ pacman -Syu --disable-sandbox
+/ ~ pacman -Syu --disable-sandbox 
 ```
 
 Then done! 
->I advise you that u should set a password for the alarm and root users and
 
 ---
 *This project was compiled and tested on the Linux Kernel version 7.3.0*
