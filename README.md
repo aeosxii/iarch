@@ -145,7 +145,6 @@ $ ~ cat /path/to/m1n1/build/m1n1.bin <(echo 'chosen.bootargs=earlycon rw logleve
 ```
 - Then `pwd` just to see where it is.
 
->Or download the pre-compiled binary [here](https://github.com/aeosxii/iarch/raw/refs/heads/main/binaries/m1n1-hoolock.bin)
 
 - Now we need palera1n
 ```
@@ -167,7 +166,7 @@ Then the device should boot into the Linux kernel and open a `telnet` communicat
 
 ### Now we need the **Arch Linux** latest arm64 release in [here](https://archlinuxarm.org/about/downloads)
 `* The ARMv8 AArch64 Multi-platform to be exact`
-- Then decompress the downloaded file your desktop 
+- Then decompress the downloaded file your desktop with
 ```
 $ ~ mkdir archlinux
 $ ~ sudo bsdtar -xpf /path/to/ArchLinuxARM-aarch64-latest.tar.gz -C archlinux
@@ -177,9 +176,10 @@ Should look something like this:
 <img width="769" height="549" alt="image" src="https://github.com/user-attachments/assets/ec950f05-e15b-400d-ae46-a9a91c663afd" />
 
 
-Now we are going to copy **qemu-user-static** and **binfmt-support** for running chroot in our host pc
+Now we are going to copy **qemu-user-static** and **binfmt-support** to run the ARM64 chroot in our host pc
+
 ```
-Install if not installed:
+Install:
 
 $ ~  sudo apt install qemu-user-static binfmt-support
 
@@ -193,8 +193,11 @@ Then copy it to the rootfs -->
 
 $ ~ sudo cp /usr/bin/qemu-aarch64-static archlinux/usr/bin/
 ```
-Then after that lets run chroot and 
+Then after that lets mount and run chroot:
 ```
+$ ~ sudo mount -t proc /proc archlinux/proc
+$ ~ sudo mount --rbind /sys archlinux/sys
+$ ~ sudo mount --rbind /dev archlinux/dev
 $ ~ sudo chroot archlinux /usr/bin/qemu-aarch64-static /bin/bash
 ```
 
@@ -210,61 +213,80 @@ Now setup:
 ```
 Now **exit** chroot environment and compact it back to send it over to the iPhone later
 ```
-$ ~ sudo tar czf archlinux-ready.tar.gz -C alarm-root .
+$ ~ sudo tar czf archlinux-ready.tar.gz -C archlinux .
 ```
 
-## Sending the Arch Linux rootfs over to the iPhone and fixing stuff
+## Sending the Arch Linux rootfs over to the iPhone and fixes
 Okay now assuming youve already booted and now have the Arch Linux rootfs we're like halfway thru!
 
-To mount the partition, just:
+***Make sure u run this inside the iPhone shell with*** `telnet 172.16.42.1` !!
+
+To mount the Arch linux designated partition, just:
 ```
 ~ # mkdir arch
 ~ # mount /dev/nvme0n1p2 /arch
 ```
+---
 
-So now that youre inside the Linux in the iPhone, just:
-```
-$ ~ telnet 172.16.42.1
-```
-And then youre inside the Linux, from here we're going to pull the rootfs to the partition, for that we are going to push it via USB Mass Storage, the iPhone would be like a USB driver for our host
+And then youre inside the Linux, from here we're going to pull the rootfs to the partition, for that we are going to push HTTP server, the iPhone would pull it via `wget`
 
-For that we want to make this is script inside linux
-```
-cat > /enable-ms.sh << 'EOF'
+- Firstly open your settings and go to the Network part
+- Search for IPv4 and switch from *Automatic* to *Manual* and put the address as `172.16.42.2` and submask `255.255.255.0`
 
-#!/bin/sh
-echo "" > /config/usb_gadget/g1/UDC
-mkdir -p /config/usb_gadget/g1/functions/mass_storage.usb0
-echo /dev/nvme0n1p2 > /config/usb_gadget/g1/functions/mass_storage.usb0/lun.0/file
-ln -sf /config/usb_gadget/g1/functions/mass_storage.usb0 /config/usb_gadget/g1/configs/c.1/
-UDC_DEV=$(ls /sys/class/udc | head -1)
-echo "$UDC_DEV" > /config/usb_gadget/g1/UDC
+Now open another terminal instance in host, then we want to go to the compressed final rootfs
+```
+$ ~ cd /path/to/archlinux-ready.tar.gz
+/ ~ python3 -m http.server 8000
+```
+==>
+```
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+```
+Now back on the iPhone shell 
+```
+~ # wget -O- http://172.16.42.2:8000/alarm-ready.tar.gz | tar -xz -C /arch
+```
+==>
+```
+Connecting to 172.16.42.2:8000 (172.16.42.2:8000)
+writing to stdout
+-                    100% |********************************|  673M  0:00:00 ETA
+written to stdout
+```
+Now check it out with `ls /arch`
 
-EOF
-```
-```
-~ # chmod +x /enable-ms.sh
-~ # nohup /enable-ms.sh > /enable-ms.log 2>&1 &
-```
+---
 
-If the script ran successfully a new device will pop up on your screen
+## **USB halting boot fix**
+When you boot the Arch Linux it may get stuck while boothing, this happens cuz sometimes `g_multi` kernel module fails to identify our USB connection, to fix grab the `usb-device.service` [here](https://raw.githubusercontent.com/aeosxii/iarch/refs/heads/main/usb-fix-tools/usb-device.service) and the `usb-setup.sh` [here](https://raw.githubusercontent.com/aeosxii/iarch/refs/heads/main/usb-fix-tools/usb-setup.sh)
 
-- Now on the host side, it should appear a new USB drive, check it with `lsblk`, and now the transfer part, open the device, then decompress the ****archlinux-ready.tar.gz**** into it
+Use the `wget` method to pull them inside the rootfs
 ```
-$ ~ sudo mkdir -p /mnt/archlinux
-$ ~ sudo mount /dev/sdX /mnt/archlinux
-$ ~ sudo tar xzf archlinux-ready.tar.gz -C /mnt/archlinux
+# Host machine
+
+$ ~ cd /path/to/usb-fix
+/ ~ python3 -m http.server 8000
+```
+```
+# iPhone shell
+
+~ # wget http://172.16.42.2:8000/usb-setup.sh -O /arch/usr/local/bin/usb-setup.sh
+~ # wget http://172.16.42.2:8000/usb-device.service -O /arch/etc/systemd/system/usb-device.service
+```
+Now to make sure they work
+```
+~ # chmod +x /arch/usr/local/bin/usb-setup.sh
+
+~ # mount -t proc /proc arch/proc
+~ # mount --rbind /sys arch/sys
+~ # mount --rbind /dev arch/dev
+~ # chroot arch /bin/bash
+
+/# systemctl enable usb-gadget.service
+/# exit
 ```
 ---
-**Then we just have some USB fixes to be done, for that:**
-- Grab the **usb-setup.sh** script i did and copy it to `/usr/local/bin` then give it permissions with
-```
-chmod +x /mnt/archlinux/usr/local/bin/usb-setup.sh
-```
-- Now for the **usb-device.service**, copy it over to `/etc/systemd/system/`, then:
-```
-systemctl enable usb-gadget.service
-```
+ 
 ### ***After this all should be ready to boot Arch Linux!***
 
 ### Booting Arch Linux
@@ -278,7 +300,6 @@ $ ~ cat /path/to/m1n1/build/m1n1.bin \
     /path/to/hoolock-linux/arch/arm64/boot/Image.gz \
     > m1n1-arch.bin
 ```
->Or the pre-compiled arch binary [here](https://github.com/aeosxii/iarch/raw/refs/heads/main/binaries/m1n1-arch.bin)
 
 ### Now that you created the **Arch Linux** boot instruction
 
