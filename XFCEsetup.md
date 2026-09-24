@@ -37,7 +37,7 @@ Then just
 
 x11vnc > /dev/null 2>&1 &
 ```
-Now if youre on Linux i recommend downloading **Remmina** VNC viewer, on macOS the finder option with `⌘ + K` works perfectly fine
+Now if youre on Linux i recommend downloading **Remmina** VNC viewer, on macOS, inside the Finder the option `⌘ + K` works perfectly fine
 - Your configs on **Remmina** should look like this:
 
 <img width="781" height="549" alt="image" src="https://github.com/user-attachments/assets/2430a7ab-488b-4e5d-8cb3-56aae3043522" />
