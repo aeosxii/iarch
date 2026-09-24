@@ -355,6 +355,8 @@ Then update everything with
 
 Then done! 
 
+### Now setup the **Desktop Environment** [here](https://github.com/aeosxii/iarch/blob/main/XFCEsetup.md)
+
 ---
 *This project was compiled and tested on the Linux Kernel version 7.3.0*
 
