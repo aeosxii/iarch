@@ -5,7 +5,7 @@
 
 # Installing Arch Linux on iPhone 8
 ### This will guide you through the partition scheme to the boot and DE setup.
-_- Currently only for iPhone 8_
+_- Currently **only** for iPhone 8_
 
 ---
 Starting up you wanna have the following prerequisites:
