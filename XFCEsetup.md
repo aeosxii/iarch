@@ -46,6 +46,8 @@ Now if youre on Linux i recommend downloading **Remmina** VNC viewer, on macOS, 
 
 -On macOS like this:
 
+<img width="598" height="346" alt="image" src="https://github.com/user-attachments/assets/e5979244-4985-4fd1-b93b-60d361ffb273" />
+
 >I recommend you change screen orientation and note that if u do this the x11vnc may crash, but just run it again
 
 And then it should connect
