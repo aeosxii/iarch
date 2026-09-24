@@ -258,7 +258,7 @@ Now check it out with `ls /arch`
 ---
 
 ## **USB halting boot fix**
-When you boot the Arch Linux it may get stuck while boothing, this happens cuz sometimes `g_multi` kernel module fails to identify our USB connection, to fix grab the `usb-device.service` [here](https://raw.githubusercontent.com/aeosxii/iarch/refs/heads/main/usb-fix-tools/usb-device.service) and the `usb-setup.sh` [here](https://raw.githubusercontent.com/aeosxii/iarch/refs/heads/main/usb-fix-tools/usb-setup.sh)
+When you boot the Arch Linux it may get stuck while boothing, this happens cuz sometimes `g_multi` kernel module fails to identify our USB connection, grab the `usb-setup.sh` and `usb-device.service` [here](https://github.com/aeosxii/iarch/raw/refs/heads/main/usb-fix.zip)
 
 Use the `wget` method to pull them inside the rootfs
 ```
@@ -282,7 +282,7 @@ Now to make sure they work
 ~ # mount --rbind /dev arch/dev
 ~ # chroot arch /bin/bash
 
-/# systemctl enable usb-gadget.service
+/# systemctl enable usb-device.service
 /# systemctl enable serial-getty@ttyGS0.service
 /# exit
 ```
