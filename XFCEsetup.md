@@ -1,5 +1,5 @@
 # Installing XFCE
-### We will use XFCE cuz its lightweight and enough for the CPU to process everything at once
+### - We will use XFCE cuz its lightweight and enough for the CPU to process everything at once, remember theres no graphical acceleration YET
 
 ---
 Now do:
