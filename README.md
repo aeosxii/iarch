@@ -360,7 +360,7 @@ Then done!
 ---
 *This project was compiled and tested on the Linux Kernel version 7.3.0*
 
-*Any problem hit me up on discord **@basehi**
+*Any problem hit me up on discord **@basehi***
 
 ![HoolockLinux](https://img.shields.io/badge/HoolockLinux-000000?style=flat&logo=linux&logoColor=white)  |  ![iPhone 8](https://img.shields.io/badge/iPhone_8-A2AAAD?style=flat&logo=apple&logoColor=white)  |  ![Arch Linux!](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
 
